@@ -5,10 +5,6 @@ on:
   push:
     branches: [ master ]
 
-env:
-  TELEGRAM_API_ID: ${{ secrets.TELEGRAM_API_ID }}
-  TELEGRAM_API_HASH: ${{ secrets.TELEGRAM_API_HASH }}
-
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -18,16 +14,24 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Set up JDK 8
+      # Modern Android command-line tools require Java 17+.
+      - name: Set up JDK 17 for Android SDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '8'
+          java-version: '17'
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
         with:
           packages: 'platform-tools platforms;android-28 build-tools;28.0.3'
+
+      # This project uses Gradle 2.2.1, which cannot run on Java 17.
+      - name: Switch to JDK 8 for legacy Gradle
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
 
       - name: Make Gradle executable
         run: chmod +x gradlew
