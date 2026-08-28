@@ -14,7 +14,6 @@ jobs:
         with:
           submodules: recursive
 
-      # Modern Android command-line tools require Java 17+.
       - name: Set up JDK 17 for Android SDK
         uses: actions/setup-java@v4
         with:
@@ -24,9 +23,8 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
         with:
-          packages: 'platform-tools platforms;android-22 platforms;android-28 build-tools;28.0.3'
+          packages: 'platform-tools platforms;android-22 platforms;android-28 build-tools;22.0.1 build-tools;28.0.3'
 
-      # This project uses Gradle 2.2.1, which cannot run on Java 17.
       - name: Switch to JDK 8 for legacy Gradle
         uses: actions/setup-java@v4
         with:
